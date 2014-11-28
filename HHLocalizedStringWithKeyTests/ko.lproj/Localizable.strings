@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  HHLocalizedStringWithKey
+
+  Created by Hyuk Hur on 11/10/14.
+  Copyright (c) 2014 Hyuk Hur. All rights reserved.
+*/
+"Localized Key" = "Localized Value in NSLocalizedString";
+"Localized Key %@" = "Localized Value in NSLocalizedString with %@";

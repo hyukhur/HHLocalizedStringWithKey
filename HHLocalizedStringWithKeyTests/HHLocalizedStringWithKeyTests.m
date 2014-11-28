@@ -31,11 +31,107 @@
     XCTAssertNotEqual(key, value);
     XCTAssertNotEqualObjects(key, value);
     XCTAssertFalse([value containsString:key]);
-    XCTAssertTrue([[value description] containsString:key]);
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:value];
+    XCTAssertTrue([[label description] containsString:key]);
     XCTAssertEqualObjects(@"Localized Value in NSLocalizedString", value);
 }
 
-- (void)_testStringWithFormat {
+- (void)testInitWithString
+{
+    NSString *key = @"Localized Key";
+    NSString *value = [[NSString alloc] initWithString:NSLocalizedString(key, nil)];
+    XCTAssertNotEqual(key, value);
+    XCTAssertNotEqualObjects(key, value);
+    XCTAssertFalse([value containsString:key]);
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:value];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString", value);
+}
+
+- (void)testInitWithFormat
+{
+    NSString *key = @"Localized Key %@";
+    NSString *value = NSLocalizedString(key, nil);
+    NSString *formatedString = [[NSString alloc] initWithFormat:value, @"test"];
+    
+    NSString *tmp = [NSString stringWithFormat:key, @"test"];
+    XCTAssertNotEqualObjects(tmp, formatedString);
+    XCTAssertFalse([formatedString containsString:key]);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:formatedString];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", formatedString);
+}
+
+- (void)testInitWithFormatArguments
+{
+    [self initWithFormatArguments:@"fake ID", @"test"];
+}
+
+- (void)initWithFormatArguments:(NSString *)fakeID, ...
+{
+    NSString *key = @"Localized Key %@";
+    NSString *value = NSLocalizedString(key, nil);
+    va_list argList;
+    va_start(argList, fakeID);
+    NSString *formatedString = [[NSString alloc] initWithFormat:value arguments:argList];
+    va_end(argList);
+    
+    NSString *tmp = [NSString stringWithFormat:key, @"test"];
+    XCTAssertNotEqualObjects(tmp, formatedString);
+    XCTAssertFalse([formatedString containsString:key]);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:formatedString];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", formatedString);
+}
+
+- (void)testInitWithFormatLocale
+{
+    NSString *key = @"Localized Key %@";
+    NSString *value = NSLocalizedString(key, nil);
+    NSString *formatedString = [[NSString alloc] initWithFormat:value locale:[NSLocale currentLocale], @"test"];
+    
+    NSString *tmp = [NSString stringWithFormat:key, @"test"];
+    XCTAssertNotEqualObjects(tmp, formatedString);
+    XCTAssertFalse([formatedString containsString:key]);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:formatedString];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", formatedString);
+}
+
+- (void)testInitWithFormatLocaleArguments
+{
+    [self initWithFormatLocaleArguments:@"fake ID", @"test"];
+}
+
+- (void)initWithFormatLocaleArguments:(NSString *)fakeID, ...
+{
+    NSString *key = @"Localized Key %@";
+    NSString *value = NSLocalizedString(key, nil);
+    va_list argList;
+    va_start(argList, fakeID);
+    NSString *formatedString = [[NSString alloc] initWithFormat:value locale:[NSLocale currentLocale] arguments:argList];
+    va_end(argList);
+    
+    NSString *tmp = [NSString stringWithFormat:key, @"test"];
+    XCTAssertNotEqualObjects(tmp, formatedString);
+    XCTAssertFalse([formatedString containsString:key]);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:formatedString];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", formatedString);
+}
+
+- (void)testStringWithFormat
+{
     NSString *key = @"Localized Key %@";
     NSString *value = NSLocalizedString(key, nil);
     NSString *formatedString = [NSString stringWithFormat:value, @"test"];
@@ -43,7 +139,45 @@
     NSString *tmp = [NSString stringWithFormat:key, @"test"];
     XCTAssertNotEqualObjects(tmp, formatedString);
     XCTAssertFalse([formatedString containsString:key]);
-    XCTAssertTrue([[formatedString description] containsString:key]);
-    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", value);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:formatedString];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", formatedString);
 }
+
+- (void)testStringWithString
+{
+    NSString *key = @"Localized Key";
+    NSString *value = [NSString stringWithString:NSLocalizedString(key, nil)];
+    XCTAssertNotEqual(key, value);
+    XCTAssertNotEqualObjects(key, value);
+    XCTAssertFalse([value containsString:key]);
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:value];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString", value);
+}
+
+- (void)testLocalizedStringWithFormat
+{
+//    NSLocale *local = [NSLocale currentLocale];
+    NSString *key = @"Localized Key %@";
+    NSString *value = NSLocalizedString(key, nil);
+    NSString *formatedString = [NSString localizedStringWithFormat:value, @"test"];
+    
+    NSString *tmp = [NSString stringWithFormat:key, @"test"];
+    XCTAssertNotEqualObjects(tmp, formatedString);
+    XCTAssertFalse([formatedString containsString:key]);
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setText:formatedString];
+    XCTAssertTrue([[label description] containsString:key]);
+    XCTAssertEqualObjects(@"Localized Value in NSLocalizedString with test", formatedString);
+}
+
+//- (NSString *)stringByAppendingString:(NSString *)aString;
+//- (NSString *)stringByAppendingFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
+
+
 @end
